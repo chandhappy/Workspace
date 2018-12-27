@@ -1,0 +1,172 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+
+@SuppressWarnings("serial")
+public class MainScreen extends JFrame {
+
+	JPanel PnlData, buttonPanel;
+	JTable table;
+	DefaultTableModel model;
+	Object[][] data = null;
+	String[] columnNames = { "Click to Send", "CampName", "CampDate",
+			"DeviceID", "Appl.Spl.", "Contact Number", "Location" };
+	String[] SelectDay = { "", "Today", "Tomorrow", "Day After Tomorrow",
+			"Yesterday" };
+	static JButton BtnImport, BtnSearch;
+	static JFileChooser jChooser;
+	JLabel LblSearch;
+	static JComboBox<String> Datefilter;
+
+	MainScreen() {
+		buttonPanel = new JPanel(new FlowLayout());
+		buttonPanel.setBackground(Color.white);
+		jChooser = new JFileChooser();
+		BtnImport = new JButton("Import Data");
+		buttonPanel.add(BtnImport);
+		BtnImport.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				jChooser.showOpenDialog(null);
+
+				File file = jChooser.getSelectedFile();
+				if (!file.getName().endsWith("xls")) {
+					JOptionPane.showMessageDialog(null,
+							"Please select only Excel file.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+
+					/*InsertDataIntoDb();*/
+					
+					 fillData(file); model = new DefaultTableModel(data,headers);
+					 tableWidth = model.getColumnCount() * 150;
+					 tableHeight = model.getRowCount() * 25;
+					 table.setPreferredSize(new Dimension(tableWidth,
+					 tableHeight));
+					
+					 table.setModel(model);
+					
+				}
+			}
+		});
+
+		LblSearch = new JLabel("Select Date Filter *:");
+		buttonPanel.add(LblSearch);
+
+		Datefilter = new JComboBox<String>(SelectDay);
+		buttonPanel.add(Datefilter);
+
+		BtnSearch = new JButton("Search");
+		buttonPanel.add(BtnSearch);
+
+		PnlData = new JPanel(new BorderLayout());
+		// model.setColumnIdentifiers(columnNames);
+		table = new JTable() {
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int rowIndex, int columnIndex) {
+				JComponent component = (JComponent) super.prepareRenderer(
+						renderer, rowIndex, columnIndex);
+				if ((Integer.parseInt(getValueAt(rowIndex, 6).toString()) < 1)
+						|| (Integer
+								.parseInt(getValueAt(rowIndex, 6).toString()) > 8)) {
+					component.setBackground(new Color(255, 111, 111));
+				} else {
+					component.setBackground(table.getBackground());
+					component.setForeground(table.getForeground());
+				}
+				return component;
+			}
+		};
+		model = new DefaultTableModel(data, columnNames) {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (getColumnName(columnIndex).equals("Select")) {
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				if (columnIndex == 0)
+					return true;
+				else
+					return false;
+			}
+		};
+
+		table.setModel(model);
+		table.getColumn("Click to Send").setPreferredWidth(160);
+		table.getColumn("Click to Send").setMaxWidth(160);
+		table.getColumn("Click to Send").setMinWidth(160);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		table.setFillsViewportHeight(true);
+		table.setEditingColumn(6);
+		table.setRowHeight(30);
+		table.setSelectionBackground(Color.blue);
+		JScrollPane TableContainer = new JScrollPane(table);
+		// table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		TableContainer.setMinimumSize(new Dimension(300, 100));
+
+		Action delete = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				((DefaultTableModel) table.getModel()).removeRow(modelRow);
+			}
+		};
+
+		ButtonColumn buttonColumn = new ButtonColumn(table, delete, 3);
+		buttonColumn.setMnemonic(KeyEvent.VK_DELETE);
+
+		PnlData.add(TableContainer);
+		add(buttonPanel, BorderLayout.NORTH);
+		add(PnlData, BorderLayout.CENTER);
+		setVisible(true);
+		setTitle("SMSInvoker");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(920, 720);
+	}
+
+	protected void InsertDataIntoDb() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
+		// TODO Auto-generated method stub
+		UIManager
+				.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		new MainScreen();
+
+	}
+
+}

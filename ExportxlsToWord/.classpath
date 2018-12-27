@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="src/|resources/" kind="src" path=""/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/file-utils.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/jxl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/poi-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/poi-excelant-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/poi-ooxml-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/poi-ooxml-schemas-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/poi-scratchpad-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/ooxml-lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.16-beta1/ooxml-lib/curvesapi-1.04.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/FDF Toolkit for Java/Headers and Libraries/Java/jFdfTk.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/pdfbox-2.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/pdfbox-debugger-2.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/pdfbox-tools-2.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/commons-logging-1.2/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/commons-logging-1.2/commons-logging-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/xmpbox-2.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/fontbox-2.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/preflight-2.0.7.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,28 @@
+import java.io.File;
+import java.io.IOException;
+
+public class NC {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		File currentDir = new File("C:\\Users\\INCBASHA\\Desktop\\cond\\Conduent\\"); // current directory
+		displayDirectoryContents(currentDir);
+	}
+
+	public static void displayDirectoryContents(File dir) {
+		try {
+			File[] files = dir.listFiles();
+			for (File file : files) {
+				if (file.isDirectory()) {
+					displayDirectoryContents(file);
+				} else {
+					System.out.println("     file:" + file.getCanonicalPath());
+					
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	}
+

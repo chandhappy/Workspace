@@ -1,0 +1,94 @@
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.TimeZone;
+
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobContainerPermissions;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.azure.storage.blob.SharedAccessBlobPermissions;
+import com.microsoft.azure.storage.blob.SharedAccessBlobPolicy;
+
+
+public class SasDownload {
+
+	public static void main(String[] args) throws InvalidKeyException, URISyntaxException, StorageException, IOException {
+		// TODO Auto-generated method stub
+
+		String storageConnectionString ="DefaultEndpointsProtocol=https;AccountName=dcpintegrated;AccountKey=u3np+WCtOJYSwawiVpb4hpvmzNfiwPDE92vf97smZWT73WsdtldjrFZpldQa2O4eI9eaSvqZyEGsjCjSV6Lf9A==;EndpointSuffix=core.windows.net";
+				
+
+			  CloudStorageAccount account = CloudStorageAccount.parse(storageConnectionString);
+
+			  // Create a blob service client
+			  CloudBlobClient blobClient = account.createCloudBlobClient();
+			  CloudBlobContainer container = blobClient.getContainerReference("pdfsastest");
+			  if (!container.exists()) {
+			    System.out.println(String.format("Container '%s' not found", ""));
+			    // Note: it's perfectly acceptable to container.create() if it doesn't already exist,
+			    // but you would probably be want to always container.createIfNotExist() if this is 
+			    // a common occurrence.
+			    System.exit(1);
+			  }
+			  
+			  BlobContainerPermissions permissions = new BlobContainerPermissions();
+
+			  // define a Read-only base policy for downloads
+			  SharedAccessBlobPolicy readPolicy = new SharedAccessBlobPolicy();
+			  readPolicy.setPermissions(EnumSet.of(SharedAccessBlobPermissions.READ));
+			  permissions.getSharedAccessPolicies().put("DownloadPolicy", readPolicy);
+
+			  // define a base policy that allows writing for uploads
+			  /*SharedAccessBlobPolicy writePolicy = new SharedAccessBlobPolicy();  
+			  writePolicy.setPermissions(EnumSet.of(SharedAccessBlobPermissions.READ, SharedAccessBlobPermissions.WRITE, SharedAccessBlobPermissions.CREATE));
+			  permissions.getSharedAccessPolicies().put("UploadPolicy", writePolicy);*/
+
+			  container.uploadPermissions(permissions);
+			  // define rights you want to bake into the SAS
+			  SharedAccessBlobPolicy itemPolicy = new SharedAccessBlobPolicy();
+			  
+			  Calendar cal = Calendar.getInstance();
+				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+				// Define the start and end time to grant permissions.
+				Date startTime = cal.getTime();
+				cal.add(Calendar.HOUR, 1);
+				Date  expirationTime= cal.getTime();
+			  
+			  
+			  // calculate Start Time
+			  /*LocalDateTime now = LocalDateTime.now();
+			  // SAS applicable as of 15 minutes ago
+			  Instant result = now.minusMinutes(15).atZone(ZoneOffset.UTC).toInstant();
+			  Date startTime = Date.from(result);*/
+
+			  // calculate Expiration Time
+			  /*now = LocalDateTime.now();
+			  result = now.plusDays(7).atZone(ZoneOffset.UTC).toInstant();
+			  Date expirationTime = Date.from(result);*/
+
+			  itemPolicy.setSharedAccessStartTime(startTime);
+			  itemPolicy.setSharedAccessExpiryTime(expirationTime);
+
+			  String blobKey = "12345_5-9-2017_ViewRetinaReport.pdf";
+			  
+			  // get reference to the Blob you want to generate the SAS for:
+			  CloudBlockBlob blob = container.getBlockBlobReference(blobKey);
+			  
+			  // generate Download SAS
+			  String sasToken = blob.generateSharedAccessSignature(itemPolicy, "DownloadPolicy");
+			  // the SAS URL is actually concatentation of the blob URI and the generated token:
+			  String sasUri = String.format("%s?%s", blob.getUri(), sasToken);
+			  URI url = new URI(sasUri);
+			  CloudBlockBlob blob1 = new CloudBlockBlob(url);
+			  blob1.downloadToFile("C:\\Users\\INCBASHA\\Desktop\\P0186\\1326\\2017-12-24\\9201CBN\\sasimage.img");
+	}
+
+}

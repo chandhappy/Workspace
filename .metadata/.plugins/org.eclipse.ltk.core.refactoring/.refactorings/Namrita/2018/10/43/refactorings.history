@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;LineNumberReaderExample&apos; to &apos;ReadLine&apos;&#x0D;&#x0A;- Original project: &apos;Namrita&apos;&#x0D;&#x0A;- Original element: &apos;LineNumberReaderExample&apos;&#x0D;&#x0A;- Renamed element: &apos;ReadLine&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;LineNumberReaderExample&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{ReadLine.java[LineNumberReaderExample" matchStrategy="1" name="ReadLine" qualified="false" references="true" similarDeclarations="false" stamp="1540530350764" textual="false" version="1.0"/>
+</session>

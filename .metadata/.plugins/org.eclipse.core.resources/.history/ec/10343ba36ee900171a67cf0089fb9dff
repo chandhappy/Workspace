@@ -1,0 +1,79 @@
+import java.io.*;
+
+import java.net.*;
+
+import java.util.*;
+
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.SharedAccessPolicy;
+import com.microsoft.azure.storage.blob.BlobContainerPermissions;
+import com.microsoft.azure.storage.blob.BlobContainerPublicAccessType;
+import com.microsoft.windowsazure.services.blob.*;
+
+import java.security.InvalidKeyException;
+
+public class SAS {
+
+	public static final String storageConnectionString ="DefaultEndpointsProtocol=https;AccountName=kjasiaapp;AccountKey=nA1XwHsi31dn7nFDnCmiWAdtbADr1DYD5OUn9R3vsZbo3FP2wibVVnlzJ4Q6/ZI01v8YdjLvZ8cycSbJweFISQ==;EndpointSuffix=core.windows.net";
+	
+	public static void main(String[] args) throws InvalidKeyException, URISyntaxException {
+		// TODO Auto-generated method stub
+		
+		// Define the connection-string with your values
+
+		// Retrieve storage account from connection-string
+
+		CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
+		//Set ACL to private
+
+		BlobContainerPermissions permissions = new BlobContainerPermissions();
+
+		// Setting Private access to Container
+
+		permissions.setPublicAccess(BlobContainerPublicAccessType.OFF);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		// Define the start and end time to grant permissions.
+		Date sharedAccessStartTime = cal.getTime();
+		cal.add(Calendar.HOUR, 1);
+		Date sharedAccessExpiryTime = cal.getTime();
+
+
+		// Define shared access policy
+
+		SharedAccessPolicy policy = new SharedAccessPolicy ();
+
+
+		// In the Sample the Shared Access Permissions are set to READ permission.
+
+		EnumSet<SharedAccessPermissions> perEnumSet = EnumSet.of(SharedAccessPermissions.READ);
+
+
+		policy.setPermissions(perEnumSet);
+
+		policy.setSharedAccessExpiryTime(sharedAccessExpiryTime);
+
+		policy.setSharedAccessStartTime(sharedAccessStartTime);
+
+
+		// Define Blob container permissions.
+
+		HashMap<String, SharedAccessPolicy > map = new HashMap<String, SharedAccessPolicy >();
+
+		map.put("policy", policy);
+
+		permissions = new BlobContainerPermissions();
+
+		permissions.setSharedAccessPolicies(map);
+
+
+		// Uploading the permissions
+
+		blobContainer.uploadPermissions(permissions);
+		SharedAccessPolicy policy = blobContainer.downloadPermissions().getSharedAccessPolicies().get("policy");
+		String signature = blobContainer.generateSharedAccessSignature(policy);
+	}
+
+}

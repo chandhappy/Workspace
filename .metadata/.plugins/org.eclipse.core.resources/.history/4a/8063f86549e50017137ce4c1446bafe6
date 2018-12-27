@@ -1,0 +1,471 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+@SuppressWarnings("serial")
+public class Dashboard extends JFrame implements ActionListener {
+	UtilDateModel datemodel, datemodel1;
+	Properties p, p1;
+	JDatePanelImpl datePanel, datePanel1;
+	static JDatePickerImpl datePicker, datePicker1;
+	String selectedFromDate, selectedToDate;
+	JLabel LblFrom, LblTo, LblchooseDate, LblAccountId,LblSearchType,LblAccountType;
+	JTextField TxtSearch;
+	JButton BtnGetStats,BtnExport;
+	static JTable table;
+	JPanel PnlSearch;
+	DefaultTableModel model;
+	String[] columnNames = { "StudyCount", "Account Name", "Account ID",
+			"Site Name", "Site ID", "SAP ID", "Contact Name", "City" };
+	JCheckBox checkbox;
+	Date date1, date2;
+	JTextArea TxtArstatus;
+	String Priority;
+	List<data> res = new LinkedList<data>();
+	public static ButtonGroup Btngrprad;
+	public static JRadioButton RdbtnSiteid, RdbtnSiteName;
+	//static String[] choices= { "ACQ. Center", "Reading Center" };	
+	//static JComboBox<String> cb= new JComboBox<String>(choices);
+	String sql;
+	
+	Dashboard() {
+		// TODO Auto-generated constructor stub
+		PnlSearch = new JPanel();
+
+		datemodel = new UtilDateModel();
+		p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		datePanel = new JDatePanelImpl(datemodel, p);
+		datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		datemodel.setValue(new java.util.Date());
+		
+				
+		RdbtnSiteid = new JRadioButton("Site Id", true);
+		RdbtnSiteName = new JRadioButton("Site Name");
+		Btngrprad = new ButtonGroup();
+		Btngrprad.add(RdbtnSiteid);
+		Btngrprad.add(RdbtnSiteName);
+
+		PnlSearch.add(RdbtnSiteid);
+		PnlSearch.add(RdbtnSiteName);
+		
+		TxtSearch = new JTextField(8);
+		PnlSearch.add(TxtSearch);
+
+		LblchooseDate = new JLabel("Select date");
+		PnlSearch.add(LblchooseDate);
+		PnlSearch.add(datePicker);
+
+		checkbox = new JCheckBox("Priority", false);
+		PnlSearch.add(checkbox);
+
+		BtnGetStats = new JButton("Get Stats...");
+		BtnGetStats.addActionListener(this);
+		PnlSearch.add(BtnGetStats);
+		
+		BtnExport = new JButton("Export as CSV.");
+		BtnExport.addActionListener(this);
+		PnlSearch.add(BtnExport);
+
+		add(PnlSearch, BorderLayout.NORTH);
+
+		model = new DefaultTableModel();
+		model.setColumnIdentifiers(columnNames);
+		table = new JTable();
+		table.setModel(model);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table.setFillsViewportHeight(true);
+		JScrollPane scroll = new JScrollPane(table);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		add(scroll, BorderLayout.CENTER);
+
+		TxtArstatus = new JTextArea(1, 1);
+		TxtArstatus.setEditable(false);
+		add(TxtArstatus, BorderLayout.SOUTH);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		setTitle("StatsTool");
+		setResizable(false);
+		setSize(1350, 400);
+		setLocationRelativeTo(null);
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
+		// TODO Auto-generated method stub
+
+		UIManager
+				.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		new Dashboard();
+	}
+
+		@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == BtnExport) {
+			 String CSV_SEPARATOR = ",";
+			    try {
+			    	if(datePicker.getModel().getValue()!=null && datePicker1.getModel().getValue()!=null){
+			    		
+			    		selectedFromDate = new SimpleDateFormat("yyyy-MM-dd")
+			    				.format((Date) datePicker.getModel().getValue());
+			    		selectedToDate = new SimpleDateFormat("yyyy-MM-dd")
+			    				.format((Date) datePicker1.getModel().getValue());
+			    	BufferedWriter bw =  new BufferedWriter(new FileWriter("C:\\Users\\INCBASHA\\Desktop\\Stat_"+selectedFromDate+"_"+selectedToDate+".csv"));
+			    	
+			    	StringBuffer oneLine1 = new StringBuffer();
+			    	oneLine1.append("COUNT");
+			    	oneLine1.append(CSV_SEPARATOR);
+			    	 oneLine1.append("ACCOUNT NAME");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("ACCOUNT ID");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("SITE NAME");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("SITE ID");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("SAP ID");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("CONTACT NAME");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("LOCATION");
+	                 oneLine1.append(CSV_SEPARATOR);
+	                 oneLine1.append("SERVICE TYPE");
+	                 
+	                 bw.write(oneLine1.toString());
+			    	 bw.newLine();
+			    	 
+			    	for (data objectDetails : res) {
+			    		 StringBuffer oneLine = new StringBuffer();
+		                 oneLine.append(objectDetails.Count);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.Accname);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.AccId);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.Sitename);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.SiteId);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.SapId);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.ContactName);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.City);
+		                 oneLine.append(CSV_SEPARATOR);
+		                 oneLine.append(objectDetails.SerType);
+		                 
+			            bw.write(oneLine.toString());
+			            bw.newLine();
+			        }
+			        bw.flush();
+			        bw.close();
+			    	}
+			    } catch (UnsupportedEncodingException e1) {
+			    } catch (FileNotFoundException e1) {
+			    } catch (IOException e1) {
+			    }	
+				
+		}
+		if(e.getSource()==BtnGetStats) {/*
+		// TODO Auto-generated method stub
+		if(datePicker.getModel().getValue()!=null && datePicker1.getModel().getValue()!=null){
+		
+		selectedFromDate = new SimpleDateFormat("yyyy-MM-dd")
+				.format((Date) datePicker.getModel().getValue());
+		selectedToDate = new SimpleDateFormat("yyyy-MM-dd")
+				.format((Date) datePicker1.getModel().getValue());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			date1 = sdf.parse(selectedFromDate);
+			date2 = sdf.parse(selectedToDate);
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		if ((selectedFromDate != null && selectedToDate != null)
+				&& (date1.before(date2)) || (date1.equals(date2))) {
+			try {
+				String DB_URL = "jdbc:mysql://localhost:3306/dcp_appointments";
+				String USER = "root";
+				String PASS = "password";
+
+				Connection conn = null;
+				PreparedStatement stmt = null;
+				ResultSet rs;
+				Class.forName("com.mysql.jdbc.Driver");
+				
+
+				if (checkbox.isSelected() == true) {
+					Priority = "1";
+				} else {
+					Priority = "0";
+				}
+				model.setRowCount(0);
+				table.removeAll();
+				table.repaint();
+				revalidate();
+				conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				
+				if(cb.getSelectedItem().toString().equals("Reading Center")) {/*
+					
+					if(RdbtnSiteName.isSelected())
+					{
+					sql = "Select count(dcp_appointments.gradings.DCPStudyId),dcp_appointments.accounts.Name,"
+							+ "dcp_appointments.sites.AccountId,dcp_appointments.sites.Name As Sitename,"
+							+ "dcp_appointments.sites.Id,dcp_appointments.accounts.SAPId,"
+							+ "concat(dcp_appointments.accounts.ContactPersonFirstName, ' ', dcp_appointments.accounts.ContactPersonLastName) as ContactName,"
+							+ "dcp_appointments.accounts.City from dcp_appointments.users "
+							+ "right join dcp_appointments.sites on dcp_appointments.users. SiteId = dcp_appointments.sites.Id "
+							+ "right join dcp_appointments.accounts on dcp_appointments.sites.AccountId = dcp_appointments.accounts.Id "
+							+ "right join dcp_appointments.gradings on dcp_appointments.gradings.UpdatedBy= dcp_appointments.users.Id"
+							+ " where (dcp_appointments.accounts.Type='RC') "
+							+  "&&(dcp_appointments.gradings.UpdatedAt between '"
+							+ selectedFromDate
+							+ " 00:00:01' and '"
+							+ selectedToDate
+							+ " 23:59:59')&& (dcp_appointments.accounts.Name ='"+TxtSearch.getText()
+							+ "') && (dcp_appointments.accounts.Country = 'SINGAPORE')"
+							+ "group by dcp_appointments.users.SiteId";
+					}
+					else {
+						sql = "Select count(dcp_appointments.gradings.DCPStudyId),dcp_appointments.accounts.Name,"
+								+ "dcp_appointments.sites.AccountId,dcp_appointments.sites.Name As Sitename,"
+								+ "dcp_appointments.sites.Id,dcp_appointments.accounts.SAPId,"
+								+ "concat(dcp_appointments.accounts.ContactPersonFirstName, ' ', dcp_appointments.accounts.ContactPersonLastName) as ContactName,"
+								+ "dcp_appointments.accounts.City from dcp_appointments.users "
+								+ "right join dcp_appointments.sites on dcp_appointments.users. SiteId = dcp_appointments.sites.Id "
+								+ "right join dcp_appointments.accounts on dcp_appointments.sites.AccountId = dcp_appointments.accounts.Id "
+								+ "right join dcp_appointments.gradings on dcp_appointments.gradings.UpdatedBy= dcp_appointments.users.Id"
+								+ " where (dcp_appointments.accounts.Type='RC') "
+								+  "&&(dcp_appointments.gradings.UpdatedAt between '"
+								+ selectedFromDate
+								+ " 00:00:01' and '"
+								+ selectedToDate
+								+ " 23:59:59')&& (dcp_appointments.accounts.Id ='"+TxtSearch.getText()
+								+ "') && (dcp_appointments.accounts.Country = 'SINGAPORE')"
+								+ "group by dcp_appointments.users.SiteId";
+					}
+				}
+				else {
+				if(RdbtnSiteName.isSelected())
+				{
+				sql = "select count(dcp_appointments.studies.Id), dcp_appointments.accounts.Name, dcp_appointments.sites.AccountId,"
+						+ "dcp_appointments.sites.Name As Sitename,"
+						+ "dcp_appointments.sites.Id,"
+						+ "dcp_appointments.accounts.SAPId,"
+						+ "concat(dcp_appointments.accounts.ContactPersonFirstName, ' ', dcp_appointments.accounts.ContactPersonLastName) as ContactName,"
+						+ "dcp_appointments.accounts.City "
+						+ "from dcp_appointments.studies"
+						+ " right join dcp_appointments.sites on dcp_appointments.sites.Id = dcp_appointments.studies.AcquisitionSiteId"
+						+ " right join dcp_appointments.accounts on dcp_appointments.accounts.Id = dcp_appointments.sites.AccountId"
+						+ " where (dcp_appointments.studies.CreatedAt between '"
+						+ selectedFromDate
+						+ " 00:00:01' and '"
+						+ selectedToDate
+						+ " 23:59:59')&& (dcp_appointments.studies.priority= "
+						+ Priority + ") && (dcp_appointments.accounts.Name ='"+TxtSearch.getText()
+								+ "') && (dcp_appointments.accounts.Country = 'INDIA')  group by dcp_appointments.sites.Id";
+				}
+				else
+				{
+					sql = "select count(dcp_appointments.studies.Id), dcp_appointments.accounts.Name, dcp_appointments.sites.AccountId,"
+							+ "dcp_appointments.sites.Name As Sitename,"
+							+ "dcp_appointments.sites.Id,"
+							+ "dcp_appointments.accounts.SAPId,"
+							+ "concat(dcp_appointments.accounts.ContactPersonFirstName, ' ', dcp_appointments.accounts.ContactPersonLastName) as ContactName,"
+							+ "dcp_appointments.accounts.City "
+							+ "from dcp_appointments.studies"
+							+ " right join dcp_appointments.sites on dcp_appointments.sites.Id = dcp_appointments.studies.AcquisitionSiteId"
+							+ " right join dcp_appointments.accounts on dcp_appointments.accounts.Id = dcp_appointments.sites.AccountId"
+							+ " where (dcp_appointments.studies.CreatedAt between '"
+							+ selectedFromDate
+							+ " 00:00:01' and '"
+							+ selectedToDate
+							+ " 23:59:59')&& (dcp_appointments.studies.priority= "
+							+ Priority + ") && (dcp_appointments.accounts.Id ='"+TxtSearch.getText()
+									+ "') && (dcp_appointments.accounts.Country = 'INDIA')  group by dcp_appointments.sites.Id";
+				}
+			}
+				stmt = conn.prepareStatement(sql);
+				rs = stmt.executeQuery();
+				if (rs != null) {
+					while (rs.next()) {
+					res.add(new data(rs.getString(1),
+								rs.getString(2),String.valueOf(3),
+								rs.getString(4),String.valueOf(5),
+								rs.getString(6),
+								rs.getString(7),
+								rs.getString(8), "ServiceType"));
+						
+						model.addRow(new Object[] {
+								rs.getString(1),
+								rs.getString(2), rs.getInt(3),
+								rs.getString(4), rs.getInt(5),
+								rs.getString(6),
+								rs.getString(7),
+								rs.getString(8) });
+					}
+				} else {
+					TxtArstatus.setText("No result...!");
+				}
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		} else {
+			TxtArstatus.setText("Check Criteria selected...!");
+		}
+
+	}
+	 else {
+		TxtArstatus.setText("Check Criteria selected...!");
+	 		}
+		*/}
+	}
+}
+class data {
+
+    public String getCount() {
+		return Count;
+	}
+
+	public void setCount(String count) {
+		Count = count;
+	}
+
+	public String getAccname() {
+		return Accname;
+	}
+
+	public void setAccname(String accname) {
+		Accname = accname;
+	}
+
+	public String getAccId() {
+		return AccId;
+	}
+
+	public void setAccId(String accId) {
+		AccId = accId;
+	}
+
+	public String getSitename() {
+		return Sitename;
+	}
+
+	public void setSitename(String sitename) {
+		Sitename = sitename;
+	}
+
+	public String getSiteId() {
+		return SiteId;
+	}
+
+	public void setSiteId(String siteId) {
+		SiteId = siteId;
+	}
+
+	public String getSapId() {
+		return SapId;
+	}
+
+	public void setSapId(String sapId) {
+		SapId = sapId;
+	}
+
+	public String getContactName() {
+		return ContactName;
+	}
+
+	public void setContactName(String contactName) {
+		ContactName = contactName;
+	}
+
+	public String getCity() {
+		return City;
+	}
+
+	public void setCity(String city) {
+		City = city;
+	}
+
+	public String getSerType() {
+		return SerType;
+	}
+
+	public void setSerType(String serType) {
+		SerType = serType;
+	}
+
+	String Count;
+    String Accname;
+    String AccId;
+    String Sitename;
+    String SiteId;
+    String SapId;
+    String ContactName;
+    String City;
+    String SerType;
+
+    public data(String Count,  String Accname, String AccId, String Sitename, String SiteId, String SapId, String ContactName, String City, String SerType) {
+       
+    	 this.Count=Count;
+    	 this.Accname = Accname;
+    	 this.AccId = AccId;
+    	 this.Sitename = Sitename;
+    	 this.SiteId = SiteId;
+    	 this.SapId = SapId;
+    	 this.ContactName = ContactName;
+    	 this.City = City;
+    	 this.SerType = SerType; 
+    }
+
+    public static data load(String[] data) {
+    	data data1 = new data(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],data[8]);
+        return data1;
+    }     
+} 
+ 
+

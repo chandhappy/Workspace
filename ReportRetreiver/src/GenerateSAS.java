@@ -1,0 +1,77 @@
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import com.microsoft.azure.storage.core.Base64;
+
+public class GenerateSAS {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//GetSASToken( "https://kjasiaapp.blob.core.windows.net/dcppdfcontainer/2017/06/12065033360/20000099/NETHRA123_DRS.pdf",  "kjasiaapp", "nA1XwHsi31dn7nFDnCmiWAdtbADr1DYD5OUn9R3vsZbo3FP2wibVVnlzJ4Q6/ZI01v8YdjLvZ8cycSbJweFISQ==");	
+	System.out.println(GetSASToken( "https://kjasiaapp.blob.core.windows.net/dcppdfcontainer/2017/06/12065033360/20000099/NETHRA123_DRS.pdf",  "", "nA1XwHsi31dn7nFDnCmiWAdtbADr1DYD5OUn9R3vsZbo3FP2wibVVnlzJ4Q6/ZI01v8YdjLvZ8cycSbJweFISQ=="));
+	}
+
+	private static String GetSASToken(String resourceUri, String keyName, String key)
+	{
+	   /* long epoch = System.currentTimeMillis()/1000L;
+	    int week = 60*60*24*7;
+	    String expiry = Long.toString(epoch + week);*/
+        //String expiry = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).toString();   
+		//SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		SimpleDateFormat sdf = new SimpleDateFormat( "yyyy/MM/dd KK:mm:ss a Z" );
+		sdf.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+		String expiry=sdf.format( new Date());
+	    System.out.println(expiry);
+	    String sasToken = null;
+	    try {
+	        String stringToSign = URLEncoder.encode(resourceUri, "UTF-8") + "\n" + expiry;
+	        String signature = getHMAC256(key, stringToSign);
+	        sasToken = "SharedAccessSignature sr=" + URLEncoder.encode(resourceUri, "UTF-8") +"&sv=2016-05-31&sr=c&si=ReadWritePolicy"+"&sig=" +
+	                URLEncoder.encode(signature, "UTF-8") + "&se=" + expiry; 
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace();
+	    }
+
+	    return sasToken;
+	}
+	
+	
+	public static String getHMAC256(String key, String input) {
+		  Mac sha256_HMAC = null;
+		  String hash = null;
+		  try {
+		      sha256_HMAC = Mac.getInstance("HmacSHA256");
+		      SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+		      sha256_HMAC.init(secret_key);
+		      hash = new String(Base64.encode(sha256_HMAC.doFinal(input.getBytes("UTF-8"))));
+
+		  } catch (InvalidKeyException e) {
+		      e.printStackTrace();
+		  } catch (NoSuchAlgorithmException e) {
+		      e.printStackTrace();
+		  } catch (IllegalStateException e) {
+		      e.printStackTrace();
+		  } catch (UnsupportedEncodingException e) {
+		      e.printStackTrace();
+		  }
+
+		  return hash;
+		}
+	
+
+	
+	
+}
+
+
+
+

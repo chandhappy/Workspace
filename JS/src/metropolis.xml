@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emr:EMR_XML xmlns:emr="http://www.meditrc.zeiss.com/czm/emr_xml">
+	<emr:worklist_entry>
+		<emr:patient_name>
+			<emr:family_name>Doe</emr:family_name>
+			<emr:given_name>John</emr:given_name>
+			<emr:middle_name />
+			<emr:name_prefix />
+			<emr:name_suffix />
+		</emr:patient_name>
+		<emr:patient_id>PAT01</emr:patient_id>
+		<emr:issuer_of_patient_id>isoo2</emr:issuer_of_patient_id>
+		<emr:patient_Bith_date>19910101</emr:patient_Bith_date>
+		<emr:patient_age>25</emr:patient_age>
+		<emr:patient_sex>M</emr:patient_sex>
+		<emr:accession_number>acc001</emr:accession_number>
+		<emr:location_code>sitename</emr:location_code>
+		<emr:procedure_date_time>yyyyMMddhhmmss</emr:procedure_date_time>
+	</emr:worklist_entry>
+</emr:EMR_XML>

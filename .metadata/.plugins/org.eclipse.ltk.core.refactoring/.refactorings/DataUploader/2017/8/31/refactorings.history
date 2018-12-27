@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;DateLabelFormatter.java&apos; to &apos;StatsTool/src/(default package)&apos;&#x0D;&#x0A;- Original project: &apos;DataUploader&apos;&#x0D;&#x0A;- Destination element: &apos;StatsTool/src/(default package)&apos;&#x0D;&#x0A;- Original element: &apos;DateLabelFormatter.java&apos;" description="Copy compilation unit" destination="=StatsTool/src&lt;" element1="/src&lt;{DateLabelFormatter.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1501592275025" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;DateLabelFormatter.java&apos; to &apos;ReportRetreiver/src/(default package)&apos;&#x0D;&#x0A;- Original project: &apos;StatsTool&apos;&#x0D;&#x0A;- Destination element: &apos;ReportRetreiver/src/(default package)&apos;&#x0D;&#x0A;- Original element: &apos;DateLabelFormatter.java&apos;" description="Copy compilation unit" destination="=ReportRetreiver/src&lt;" element1="/src&lt;{DateLabelFormatter.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1513740174868" units="1" version="1.0"/>
+</session>

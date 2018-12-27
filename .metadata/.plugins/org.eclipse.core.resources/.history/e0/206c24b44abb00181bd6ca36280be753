@@ -1,0 +1,95 @@
+
+public class LoopUserid {
+
+	@SuppressWarnings("unused")
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String
+        CreatedAt,
+        UpdatedAt,
+        ClinicalFindings,
+        ObservationAndComments,
+        Recommendation,
+        RecommendationDetails,
+        RegionsFindings,
+        FindingsDetails, 
+        ProductId;
+		
+		int i;
+		
+		String []CreatedBy = {"e098ab06-9b94-496b-8831-e90e6673689a",
+				"7e9a5d73-14fb-43c1-b632-999074c81f0c",
+				"751251fb-27b7-4a0d-b246-575857d77b46",
+				"9c27e49e-3aaa-4e73-95e0-b5d47028d526",
+				"ffa84245-bcfc-4cd2-aaab-5542c2aaa9e7",
+				"84d9d060-06d1-4a23-8947-6cb0028d5411",
+				"3e074658-b0bb-45e3-aa34-7e027ca82e1a",
+				"4c425382-0427-4393-ab0c-db11ae53a41b",
+				"f21175af-9935-4e97-845c-b2f482d3f30d",
+				"b2f4ffbd-8d1c-477f-a480-8051bebb10b3",
+				"3107925c-2602-4d9a-a2bc-66916252a716",
+				"9f16db37-3b12-42da-9c09-ad34b752d0b1",
+				"7b506ac3-84c5-4503-b144-fb46eecf73cf",
+				"546f86fe-fa07-4071-a8ca-9af2ff2ca8a9",
+				"91291af7-5142-4b09-a011-140f55c40694",
+				"eedadd34-8d88-47ed-8c45-7e1fd76979ca",
+				"d660d2ee-4e80-416b-81f5-2a264aeeb8f7",
+				"a0c38bd7-df12-4239-9684-5ce7b5a3122a",
+				"ace02050-c1cb-49c9-8a55-fac3dc483d52",
+				"5b7cc40d-afe1-4392-807f-833026a211a5",
+				"8a257f73-ac1a-438c-93de-12f22a8c6470",
+				"00844fef-c00c-4c46-9b23-f73e6adbc171",
+				"b88911e3-57ac-4791-8c6a-7909a593d3e0",
+				"bf5d02ca-a329-4335-9be2-324d0d01f5fa",
+				"eec0b616-ff0e-47b8-91c0-cd0c61d8bd04",
+				"8ad7ae7c-3730-4580-9af6-a6ab17ff5450",
+				"9297cd86-c6ce-4f49-8837-c0fb24895f16",
+				"dfcf81ba-1785-443b-a3db-7965f299044c",
+				"37fcdc9f-50ed-4ad5-b4bb-81e259b1ae8e",
+				"4b73fd38-0113-4d72-986c-66bf69552edd",
+				"f5e0bd70-535b-4ea9-a316-f91f4152eb2d",
+				"6a1556dc-f57b-499b-a4ce-8b940aff3a7b",
+				"92009987-1f37-456d-8ab2-ab9a0d26b2b5",
+				"3104c6cf-dc23-47fb-a8a9-45f086d93d01",
+				"0a19b0dd-c316-4ca1-bba0-8847f0c745ce",
+				"d6f8a4cc-ea55-4a00-9014-44148ca6c587",
+				"a91f9a94-392a-4a49-83ed-b8b4e030824e",
+				"d4b15348-d101-44d4-91e7-4707aa17a0d2",
+				"44733275-0c40-4f05-bc3e-f28679a10fa7",
+				"0c9b31b3-c99e-4be1-a1d8-f2b855beaf54",
+				"2f775884-0c7e-413a-b4db-e21a4169c8bf",
+				"59b55240-0a87-4e1f-b27c-89d07eaf2243",
+				"d9bbff1f-cccf-459f-9010-511883aaa5a3",
+				"6585e536-c948-4d49-bb06-3e1743ded7ea",
+				"79352919-285e-4721-9442-9037904828b0",
+				"391f2aae-7f98-4fbc-8d77-4a50ab2f1079",
+				"177b22bd-d705-4cb6-ae81-397df3f28cb7",
+				"2063b80c-5c08-418f-889d-f5b6ce21165a",
+				"80f27ad9-feb6-4325-833c-00dade7ecf45",
+				"e09e9531-cff0-432d-8ed4-1905da011595",
+				"351bfb23-af65-4b3c-ab31-af3aff1f940a",
+				"98bcd675-4de2-42ec-bf72-d28a5382c610",
+				"293c21a6-0867-419e-83dd-5086a77c35ff",
+				"e17ee844-73e9-4bb5-b7b6-afe484f644da",
+				"ad317e05-abe6-45c5-a81f-f9448de3f163",
+				"81a29140-a585-4290-ac3e-5eb0019eaf73",
+				"7babc540-f36c-43d5-8ab3-d6f9bf437473",
+				"a3f63e57-ed77-4126-87d4-9eb6d4bf2d30",
+				"b6f994b3-6b03-4614-a60a-20ba246e9e58",
+				"fce7dfa5-5df8-4542-90c9-71b6fd3c86c6"};
+		String []name= {"SN:NO DR","SN:MILD NPDR","SN:Moderate NPDR","SN:PDR","SN:Severe PDR","SN:Maculopathy"};
+		
+		for(i=0 ;i<CreatedBy.length; i++)
+		{
+			for(int j=0;j<name.length;j++) {
+		System.out.println(CreatedBy[i] +":"+ name[j]);
+			}
+			
+		}
+		
+		
+
+	}
+
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;JsonEncoder.java&apos; to &apos;JSONExport/src/(default package)&apos;&#x0D;&#x0A;- Original project: &apos;JSONExport&apos;&#x0D;&#x0A;- Destination element: &apos;JSONExport/src/(default package)&apos;&#x0D;&#x0A;- Original element: &apos;JsonEncoder.java&apos;" description="Copy compilation unit" destination="/src&lt;" element1="/src&lt;{JsonEncoder.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1510847963265" units="1" version="1.0"/>
+</session>

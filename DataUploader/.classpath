@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/jdatepicker-1.3.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/sqlite-jdbc-3.8.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/poi-3.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/file-utils.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/PackageForAzureLibrariesForJava/azure-serviceruntime-0.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/PackageForAzureLibrariesForJava/azure-storage-4.0.0.jar" sourcepath="C:/Users/INCBASHA/.m2/repository/com/microsoft/azure/azure-storage/4.0.0/azure-storage-4.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/PackageForAzureLibrariesForJava/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/INCBASHA/Downloads/mysql-connector-java-5.1.18.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

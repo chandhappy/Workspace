@@ -1,0 +1,209 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.regex.Pattern;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import com.sun.org.apache.xerces.internal.impl.xs.identity.Selector.Matcher;
+
+@SuppressWarnings("serial")
+public class Dashboard extends JFrame implements ActionListener {
+	UtilDateModel datemodel, datemodel1;
+	Properties p, p1;
+	JDatePanelImpl datePanel, datePanel1;
+	static JDatePickerImpl datePicker, datePicker1;
+	String selectedFromDate, selectedToDate;
+	JLabel LblFrom, LblTo, LblchooseDate, LblAccountId,LblSearchType,LblAccountType,LblTotal,LblPending,LblReported,LblDownloaded;
+	JLabel LblTotalCount,LblPendingCount,LblReportedCount,LblDownloadedCount;
+	JTextField TxtSearch;
+	JButton BtnGetStats,BtnExport;
+	static JTable table;
+	JPanel PnlSearch,PnlTotal, PnlPending, PnlReported, Pnldownloaded,PnlCenter;
+	DefaultTableModel model;
+	JCheckBox checkbox;
+	Date date1, date2;
+	JTextArea TxtArstatus;
+	String Priority;
+	public static ButtonGroup Btngrprad;
+	public static JRadioButton RdbtnSiteid, RdbtnSiteName;
+    String Dest ="C:\\Users\\INCBASHA\\Desktop\\P0186";
+	String sql;
+	String selectedDate;
+	
+	Dashboard() {
+		// TODO Auto-generated constructor stub
+		PnlSearch = new JPanel();
+
+		datemodel = new UtilDateModel();
+		p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		datePanel = new JDatePanelImpl(datemodel, p);
+		datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		datemodel.setValue(new java.util.Date());
+		
+				
+		RdbtnSiteid = new JRadioButton("Site Id", true);
+		RdbtnSiteName = new JRadioButton("Site Name");
+		Btngrprad = new ButtonGroup();
+		Btngrprad.add(RdbtnSiteid);
+		Btngrprad.add(RdbtnSiteName);
+
+		PnlSearch.add(RdbtnSiteid);
+		PnlSearch.add(RdbtnSiteName);
+		
+		TxtSearch = new JTextField(8);
+		PnlSearch.add(TxtSearch);
+
+		LblchooseDate = new JLabel("Select date");
+		PnlSearch.add(LblchooseDate);
+		PnlSearch.add(datePicker);
+
+		BtnGetStats = new JButton("Get Stats ");
+		BtnGetStats.addActionListener(this);
+		PnlSearch.add(BtnGetStats);
+		
+		BtnExport = new JButton("Export as CSV.");
+		BtnExport.addActionListener(this);
+		PnlSearch.add(BtnExport);
+
+		add(PnlSearch, BorderLayout.NORTH);
+
+		PnlCenter= new JPanel();
+		
+		PnlTotal = new JPanel(new BorderLayout());
+		PnlTotal.setSize(200, 200);
+	    PnlTotal.setBackground(Color.WHITE);
+	    LblTotal = new JLabel("Total Studies");
+	    LblTotal.setFont(new Font("Times New Roman", Font.BOLD, 21));
+	    PnlTotal.add(LblTotal,BorderLayout.NORTH);
+	    LblTotalCount = new JLabel("000");
+	    LblTotalCount.setFont(new Font("Times New Roman", Font.BOLD, 21));
+	    PnlTotal.add(LblTotalCount,BorderLayout.SOUTH);
+	    PnlTotal.setBorder(BorderFactory.createEmptyBorder(80, 80, 80, 80));
+	    PnlCenter.add(PnlTotal);
+	    
+	    PnlPending= new JPanel(new BorderLayout());
+		PnlPending.setSize(200, 200);
+		PnlPending.setBackground(Color.orange);
+		LblPending = new JLabel("Pending Studies");
+		LblPending.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		PnlPending.add(LblPending,BorderLayout.NORTH);
+		LblPendingCount = new JLabel("000");
+		LblPendingCount.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		PnlPending.add(LblPendingCount,BorderLayout.SOUTH);
+		PnlPending.setBorder(BorderFactory.createEmptyBorder(80, 80, 80, 80));
+		PnlCenter.add(PnlPending);
+		
+		PnlReported = new JPanel(new BorderLayout());
+		PnlReported.setSize(200, 200);
+		PnlReported.setBackground(Color.GREEN);
+		LblReported = new JLabel("Reported Studies");
+		LblReported.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		PnlReported.add(LblReported,BorderLayout.NORTH);
+		LblReportedCount = new JLabel("000");
+		LblReportedCount.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		PnlReported.add(LblReportedCount,BorderLayout.SOUTH);
+		PnlReported.setBorder(BorderFactory.createEmptyBorder(80, 80, 80, 80));
+		PnlCenter.add(PnlReported);
+		
+		Pnldownloaded = new JPanel(new BorderLayout());
+		Pnldownloaded.setSize(200, 200);
+		Pnldownloaded.setBackground(Color.GRAY);
+		LblDownloaded = new JLabel("Downloaded Studies");
+		LblDownloaded.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		Pnldownloaded.add(LblDownloaded,BorderLayout.NORTH);
+		LblDownloadedCount = new JLabel("000");
+		LblDownloadedCount.setFont(new Font("Times New Roman", Font.BOLD, 21));
+		Pnldownloaded.add(LblDownloadedCount,BorderLayout.SOUTH);
+		Pnldownloaded.setBorder(BorderFactory.createEmptyBorder(80, 80, 80, 80));
+		PnlCenter.add(Pnldownloaded);
+		add(PnlCenter);
+		
+		TxtArstatus = new JTextArea(1, 1);
+		TxtArstatus.setEditable(false);
+		add(TxtArstatus, BorderLayout.SOUTH);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		
+		setTitle("DashBoard");
+		setResizable(true);
+		setSize(1350, 400);
+		setLocationRelativeTo(null);
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException,
+			UnsupportedLookAndFeelException {
+		// TODO Auto-generated method stub
+
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		new Dashboard();
+	}
+
+		@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == BtnExport) {
+			selectedDate = new SimpleDateFormat("yyyy-MM-dd").format((Date) datePicker.getModel().getValue());
+			String s = new String("9201CBN01");
+			java.util.regex.Matcher matcher = Pattern.compile("\\d+").matcher(s);
+			matcher.find();
+			//System.out.println(Integer.valueOf(matcher.group()));
+			
+			java.util.regex.Matcher matcher2 = Pattern.compile("[a-zA-Z]+\\.?").matcher(s);
+			matcher2.find();
+			//System.out.println(matcher2.group().toString());
+			
+			new File(Dest+"\\"+TxtSearch.getText()).mkdir();
+			new File(Dest+"\\"+TxtSearch.getText()+"\\"+selectedDate).mkdir();
+			new File(Dest+"\\"+TxtSearch.getText()+"\\"+selectedDate+"\\"+Integer.valueOf(matcher.group())+matcher2.group().toString()).mkdir();
+			String path = Dest+"\\"+TxtSearch.getText()+"\\"+selectedDate+"\\"+Integer.valueOf(matcher.group())+matcher2.group().toString()+"\\test.txt";
+			
+			//System.out.println(path);
+			try {
+				new File(path).createNewFile();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if(e.getSource()==BtnGetStats) {
+			 new Thread() {
+			     public void run() {
+			    	    LblPendingCount.setText("27");
+						LblDownloadedCount.setText("27");
+						LblTotalCount.setText("27");
+						LblReportedCount.setText("27");
+			     }
+			   }.start();
+			} 
+		}
+}
+ 
+

@@ -1,0 +1,422 @@
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.client.params.ClientPNames;
+import org.json.JSONObject;
+
+public class LoopUserid {
+/*	String[] RegionsFindings = {
+			"{\"RetinalSurface\":{\"MainFinding\":2,\"MainFindingText\":\"Normal reading of retinal surface\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":2,\"MainFindingText\":\"Arterioles & venules of normal contour & caliber\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}",
+			"{\"RetinalSurface\":{\"MainFinding\":2,\"MainFindingText\":\"Normal reading of retinal surface\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Vessels finding present\",\"Findings\":{\"RVMicroaneurysm\":\"Microaneurysm(s)\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}",
+			"{\"RetinalSurface\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Surface finding present\",\"Findings\":{\"RSExudates\":\"Exudates\",\"RSCtnWoolSpts\":\"Cotton wool spots\",\"RSBlotHmrhges\":\"Dot/Blot  haemorrhages\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Vessels finding present\",\"Findings\":{\"RVMicroaneurysm\":\"Microaneurysm(s)\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}",
+			"{\"RetinalSurface\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Surface finding present\",\"Findings\":{\"RSExudates\":\"Exudates\",\"RSCtnWoolSpts\":\"Cotton wool spots\",\"RSBlotHmrhges\":\"Dot/Blot  haemorrhages\",\"RSIntraRetinalHmrhges\":\"Intraretinal haemorrhages\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Vessels finding present\",\"Findings\":{\"RVMicroaneurysm\":\"Microaneurysm(s)\",\"RVVenousBeading\":\"Venous beading\",\"RVIntraRetnlMcrovsclrAbnrmlts\":\"Intraretinal microvascular abnormalities (IRMA)\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}",
+			"{\"RetinalSurface\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Surface finding present\",\"Findings\":{\"RSExudates\":\"Exudates\",\"RSCtnWoolSpts\":\"Cotton wool spots\",\"RSBlotHmrhges\":\"Dot/Blot  haemorrhages\",\"RSIntraRetinalHmrhges\":\"Intraretinal haemorrhages\",\"RSVitreousHmrhges\":\"Vitreous /Preretinal haemorrhage\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Vessels finding present\",\"Findings\":{\"RVMicroaneurysm\":\"Microaneurysm(s)\",\"RVVenousBeading\":\"Venous beading\",\"RVIntraRetnlMcrovsclrAbnrmlts\":\"Intraretinal microvascular abnormalities (IRMA)\",\"RVNeovascularization\":\"Neovascularization\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}",
+			"{\"RetinalSurface\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Surface finding present\",\"Findings\":{\"RSMacularEdema\":\"Macular edema\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":2,\"MainFindingText\":\"Arterioles & venules of normal contour & caliber\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":2,\"MainFindingText\":\"ONH normal reading\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null}}" };
+*/
+	String RegionsFindings ="{\"RetinalSurface\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Surface finding present\",\"Findings\":{\"RSExudates\":\"Exudates\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":3,\"MainFindingText\":\"Retinal Vessels finding present\",\"Findings\":{\"RVMildArteriorNarrowing\":\"Mild generalized arteriolar narrowing\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":3,\"MainFindingText\":\"ONH findings present\",\"Findings\":{\"ONHPeriPappillaryAtrophy\":\"Peri-papillary atrophy\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null}}\r\n" + 
+			"}";
+	
+	String CreatedAt="2018-09-24T13:28:56.782Z",
+			UpdatedAt="2018-09-24T13:28:56.782Z";
+	
+/*	String CreatedAt = "2018-09-21 12:00:58.580",
+	UpdatedAt = "2018-09-21 12:00:58.580";*/
+	
+	String[] ClinicalFindings = {
+			"Clinical investigation of the un-dilated fundus photograph shows a clear picture of retinal surface, retinal vasculature and optic nerve head region for making clinical comments.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows normal contour and no retinal lesions of clinical significance. There are no signs of microaneurisms, haemorrhages or hard/smooth exudates.\r\n"
+					+ "\r\n"
+					+ "The retinal vasculature is normal with no signs of abnormality in arterioles & venules.\r\n"
+					+ "\r\n"
+					+ "The ONH region appears normal. There are no other lesions or optic nerve head abnormalities observed in the fundus photograph.\r\n"
+					+ "\r\n" + "",
+			"Clinical investigation of the un-dilated fundus photograph shows a clear picture of retinal surface, retinal vasculature and optic nerve head region for making clinical comments.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows normal contour and no retinal lesions of clinical significance. There are no signs of microaneurisms, haemorrhages or hard/smooth exudates.\r\n"
+					+ "\r\n"
+					+ "The retinal vasculature shows the following findings of clinical significance :\r\n"
+					+ " - Microaneurysm(s)\r\n" + "\r\n"
+					+ "The ONH region appears normal. There are no other lesions or optic nerve head abnormalities observed in the fundus photograph.\r\n"
+					+ "\r\n" + "",
+			"Examination of the non-mydriatic fundus image shows a clear picture of retinal surface, retinal vasculature and optic nerve head region for making clinical observations.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows the following findings of clinical significance :\r\n"
+					+ " - Exudates\r\n" + " - Cotton wool spots\r\n"
+					+ " - Dot/Blot  haemorrhages\r\n" + "\r\n"
+					+ "The retinal vasculature shows the following findings of clinical significance :\r\n"
+					+ " - Microaneurysm(s)\r\n" + "\r\n"
+					+ "The ONH region shows normal contoured optic disc and cup with no other lesions of clinical significance.\r\n"
+					+ "\r\n" + "",
+			"Clinical investigation of the un-dilated fundus photograph shows a clear picture of retinal surface, retinal vasculature and optic nerve head region for making clinical comments.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows the following findings of clinical significance :\r\n"
+					+ " - Exudates\r\n" + " - Cotton wool spots\r\n"
+					+ " - Dot/Blot  haemorrhages\r\n"
+					+ " - Intraretinal haemorrhages\r\n" + "\r\n"
+					+ "The retinal vasculature shows the following findings of clinical significance :\r\n"
+					+ " - Microaneurysm(s)\r\n" + " - Venous beading\r\n"
+					+ " - Intraretinal microvascular abnormalities (IRMA)\r\n"
+					+ "\r\n"
+					+ "The ONH region appears normal. There are no other lesions or optic nerve head abnormalities observed in the fundus photograph.\r\n"
+					+ "\r\n" + "",
+			"Clinical examination of un-dilated fundus image shows a normal retinal surface, retinal vasculature and optic head region for making clinical observations for retinal diseases.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows the following findings of clinical significance :\r\n"
+					+ " - Exudates\r\n" + " - Cotton wool spots\r\n"
+					+ " - Dot/Blot  haemorrhages\r\n"
+					+ " - Intraretinal haemorrhages\r\n"
+					+ " - Vitreous /Preretinal haemorrhage\r\n" + "\r\n"
+					+ "The retinal vasculature shows the following findings of clinical significance :\r\n"
+					+ " - Microaneurysm(s)\r\n" + " - Venous beading\r\n"
+					+ " - Intraretinal microvascular abnormalities (IRMA)\r\n"
+					+ " - Neovascularization\r\n" + "\r\n"
+					+ "The ONH region does not show any optic nerve abnormalities. The shape & size of the ONH region in the fundus photograph observed appear to be normal.\r\n"
+					+ "\r\n" + "",
+			"Examination of the non-mydriatic fundus image shows a clear picture of retinal surface, retinal vasculature and optic nerve head region for making clinical observations.\r\n"
+					+ "\r\n"
+					+ "The retinal surface shows the following findings of clinical significance :\r\n"
+					+ " - Macular edema\r\n" + "\r\n"
+					+ "The retinal vasculature is normal with arterioles & venules of normal contour & caliber.\r\n"
+					+ "\r\n"
+					+ "The ONH region shows normal contoured optic disc and cup with no other lesions of clinical significance.\r\n"
+					+ "\r\n" + "" };
+
+	String[] ObservationAndComments = {
+			"Observations of the retinal surface reveal a normal reading. There are no findings indicative of any changes in the retinal surface.\r\n"
+					+ "\r\n"
+					+ "Observations of the retinal vasculature reveal no signs of vascular changes associated to elevated blood pressure.\r\n"
+					+ "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "",
+			"Observations of the retinal surface reveal a normal reading. Observations of the retinal vasculature reveal findings indicative of mild nonproliferative diabetic retinopathy.\r\n"
+					+ "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "",
+			"Observations of the retinal region reveal a clinically significant reading. There are findings indicative of :\r\n"
+					+ " - Moderate nonproliferative diabetic retinopathy\r\n"
+					+ "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "",
+			"Observations of the retinal region reveal a clinically significant reading. There are findings indicative of :\r\n"
+					+ " - Severe nonproliferative diabetic retinopathy\r\n"
+					+ "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "",
+			"Observations of the retinal region reveal a clinically significant reading. There are findings indicative of :\r\n"
+					+ " - Proliferative diabetic retinopathy\r\n" + "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "",
+			"Observations of the retinal region reveal a clinically significant reading. There are findings indicative of :\r\n"
+					+ " - Maculopathy changes\r\n" + "\r\n"
+					+ "Observations of the retinal vasculature reveal no signs of vascular changes associated to elevated blood pressure.\r\n"
+					+ "\r\n"
+					+ "Observations of the ONH region shows findings which are indicative of normal ONH structures.\r\n"
+					+ "\r\n" + "" };
+
+	String[] RecommendationDetails = {
+			"{\"RecommendationCode\":1,\"RecommendationText\":\"Recommended to have an annual eye examination in 12 months.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}",
+			"{\"RecommendationCode\":2,\"RecommendationText\":\"Recommended to have further eye examination by an eye specialist before 6 months.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}",
+			"{\"RecommendationCode\":2,\"RecommendationText\":\"Recommended to have further eye examination by an eye specialist before 6 months.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}",
+			"{\"RecommendationCode\":3,\"RecommendationText\":\"Recommended to have further eye examination by an eye specialist at the earliest.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}",
+			"{\"RecommendationCode\":3,\"RecommendationText\":\"Recommended to have further eye examination by an eye specialist at the earliest.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}",
+			"{\"RecommendationCode\":3,\"RecommendationText\":\"Recommended to have further eye examination by an eye specialist at the earliest.\",\"HypertensiveRetinopathySeverity\":1,\"HypertensiveRetinopathyRecommedationText\":null}" };
+
+
+	@SuppressWarnings("unused")
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+			LoopUserid a = new LoopUserid();
+			//a.sendGet();
+			a.sendPost();
+		
+		String //CreatedAt = "2018-09-21 12:00:58.580",
+				//UpdatedAt = "2018-09-21 12:00:58.580", 
+		
+				
+				Recommendation = "NULL",
+				FindingsDetails = "NULL", ProductId = "visuhealth";
+
+		int i;
+
+		String[] CreatedBy = { "e098ab06-9b94-496b-8831-e90e6673689a",
+				"7e9a5d73-14fb-43c1-b632-999074c81f0c",
+				"751251fb-27b7-4a0d-b246-575857d77b46",
+				"9c27e49e-3aaa-4e73-95e0-b5d47028d526",
+				"ffa84245-bcfc-4cd2-aaab-5542c2aaa9e7",
+				"84d9d060-06d1-4a23-8947-6cb0028d5411",
+				"3e074658-b0bb-45e3-aa34-7e027ca82e1a",
+				"4c425382-0427-4393-ab0c-db11ae53a41b",
+				"f21175af-9935-4e97-845c-b2f482d3f30d",
+				"b2f4ffbd-8d1c-477f-a480-8051bebb10b3",
+				"3107925c-2602-4d9a-a2bc-66916252a716",
+				"9f16db37-3b12-42da-9c09-ad34b752d0b1",
+				"7b506ac3-84c5-4503-b144-fb46eecf73cf",
+				"546f86fe-fa07-4071-a8ca-9af2ff2ca8a9",
+				"91291af7-5142-4b09-a011-140f55c40694",
+				"eedadd34-8d88-47ed-8c45-7e1fd76979ca",
+				"d660d2ee-4e80-416b-81f5-2a264aeeb8f7",
+				"a0c38bd7-df12-4239-9684-5ce7b5a3122a",
+				"ace02050-c1cb-49c9-8a55-fac3dc483d52",
+				"5b7cc40d-afe1-4392-807f-833026a211a5",
+				"8a257f73-ac1a-438c-93de-12f22a8c6470",
+				"00844fef-c00c-4c46-9b23-f73e6adbc171",
+				"b88911e3-57ac-4791-8c6a-7909a593d3e0",
+				"bf5d02ca-a329-4335-9be2-324d0d01f5fa",
+				"eec0b616-ff0e-47b8-91c0-cd0c61d8bd04",
+				"8ad7ae7c-3730-4580-9af6-a6ab17ff5450",
+				"9297cd86-c6ce-4f49-8837-c0fb24895f16",
+				"dfcf81ba-1785-443b-a3db-7965f299044c",
+				"37fcdc9f-50ed-4ad5-b4bb-81e259b1ae8e",
+				"4b73fd38-0113-4d72-986c-66bf69552edd",
+				"f5e0bd70-535b-4ea9-a316-f91f4152eb2d",
+				"6a1556dc-f57b-499b-a4ce-8b940aff3a7b",
+				"92009987-1f37-456d-8ab2-ab9a0d26b2b5",
+				"3104c6cf-dc23-47fb-a8a9-45f086d93d01",
+				"0a19b0dd-c316-4ca1-bba0-8847f0c745ce",
+				"d6f8a4cc-ea55-4a00-9014-44148ca6c587",
+				"a91f9a94-392a-4a49-83ed-b8b4e030824e",
+				"d4b15348-d101-44d4-91e7-4707aa17a0d2",
+				"44733275-0c40-4f05-bc3e-f28679a10fa7",
+				"0c9b31b3-c99e-4be1-a1d8-f2b855beaf54",
+				"2f775884-0c7e-413a-b4db-e21a4169c8bf",
+				"59b55240-0a87-4e1f-b27c-89d07eaf2243",
+				"d9bbff1f-cccf-459f-9010-511883aaa5a3",
+				"6585e536-c948-4d49-bb06-3e1743ded7ea",
+				"79352919-285e-4721-9442-9037904828b0",
+				"391f2aae-7f98-4fbc-8d77-4a50ab2f1079",
+				"177b22bd-d705-4cb6-ae81-397df3f28cb7",
+				"2063b80c-5c08-418f-889d-f5b6ce21165a",
+				"80f27ad9-feb6-4325-833c-00dade7ecf45",
+				"e09e9531-cff0-432d-8ed4-1905da011595",
+				"351bfb23-af65-4b3c-ab31-af3aff1f940a",
+				"98bcd675-4de2-42ec-bf72-d28a5382c610",
+				"293c21a6-0867-419e-83dd-5086a77c35ff",
+				"e17ee844-73e9-4bb5-b7b6-afe484f644da",
+				"ad317e05-abe6-45c5-a81f-f9448de3f163",
+				"81a29140-a585-4290-ac3e-5eb0019eaf73",
+				"7babc540-f36c-43d5-8ab3-d6f9bf437473",
+				"a3f63e57-ed77-4126-87d4-9eb6d4bf2d30",
+				"b6f994b3-6b03-4614-a60a-20ba246e9e58",
+				"fce7dfa5-5df8-4542-90c9-71b6fd3c86c6" };
+
+		String[] name = { "SN:NO DR", "SN:Mild NPDR", "SN:Moderate NPDR",
+				"SN:Severe NPDR", "SN:PDR", "SN:Maculopathy" };
+
+		
+		for (i = 0; i<1; i++) {
+			for (int j = 0; j < 1; j++) {
+				/*
+				 * System.out.println(CreatedBy[i] + ":" + name[j]);
+				 * System.out.println(ClinicalFindings[j]);
+				 * System.out.println(ObservationAndComments[j]);
+				 * System.out.println(RecommendationDetails[j]);
+				 * System.out.println(RegionsFindings[j]); System.out.println();
+				 * System.out.println();
+				 */
+				try {
+					//URL url = new URL("https://vhdevservices.zeiss.com/StudyServiceAPI/api/ClinicalFindings/CreateFaouriteFinding");
+					URL url = new URL("https://vhdevservices.zeiss.com/ImageServiceAPI/api/Image/ContainerSasUri");
+					
+					JSONObject json = new JSONObject();
+					json.put("Name", name[j]);
+					/*
+					 * json.put("CreatedBy", CreatedBy[i]);
+					 * json.put("CreatedAt", CreatedAt); json.put("UpdatedAt",
+					 * UpdatedAt); json.put("ClinicalFindings",
+					 * ClinicalFindings[j]); json.put("ObservationAndComments",
+					 * ObservationAndComments[j]); json.put("Recommendation",
+					 * Recommendation); json.put("RecommendationDetails",
+					 * RecommendationDetails[j]); json.put("RegionsFindings",
+					 * RegionsFindings[j]); json.put("FindingsDetails",
+					 * FindingsDetails); json.put("ProductId", ProductId);
+					 */
+					
+					/*
+					 * Map<String, Object> params = new LinkedHashMap<>();
+					 * params.put("Name", name[j]); params.put("CreatedBy",
+					 * CreatedBy[i]); params.put("CreatedAt", CreatedAt);
+					 * params.put("UpdatedAt", UpdatedAt);
+					 * params.put("ClinicalFindings", ClinicalFindings[j]);
+					 * params.put("ObservationAndComments",
+					 * ObservationAndComments[j]); params.put("Recommendation",
+					 * Recommendation); params.put("RecommendationDetails",
+					 * RecommendationDetails[j]); params.put("RegionsFindings",
+					 * RegionsFindings[j]); params.put("FindingsDetails",
+					 * FindingsDetails); params.put("ProductId", ProductId);
+					 */
+					
+					/*
+					 * StringBuilder postData = new StringBuilder(); for
+					 * (Map.Entry<String, Object> param : params.entrySet()) {
+					 * if (postData.length() != 0) postData.append('&');
+					 * postData.append( URLEncoder.encode(param.getKey(),
+					 * "UTF-8")); postData.append('=');
+					 * postData.append(URLEncoder.encode(
+					 * String.valueOf(param.getValue()), "UTF-8")); } byte[]
+					 * postDataBytes = postData.toString() .getBytes("UTF-8");
+					 */
+					
+					String Auth= "bearer dTDZC4FkHXg4hEd_yiYgKwn3zfIcL_PIOn-ydhp2MO15UVETntbRtcfnNzRKXDNvtrG7OrOTHFWMVClpVhluzrvZSsPwa_VlIok-TqDgt5hflt2TkC6dSlLV-bD7iUHoUtlj0IvZPM_vWSR9KdGRtbbUAuZYg76DQITS8jiWls4jI_9_farEIbkX2Uk2wquiqfltEMMIUQ21Q63g7YNGOAFXh4SNQv6xx-Dg0p_QjZ9U8VHNCoQOV5Oae9PjXcfcWzHX5wjzOrVba1tarlyhlH5ZwX2RrNssvw_XI1J57P7poOQ5QV5qXss8UO84TpKRIElq6r7GIsZ5xHWaWxbtKZJ7Q8X7FC-T5wf5uctVtQtgiRm4xRAZwpdGptAHNFENmTNVAQCQcjFZG_g7Nn-ikQ";
+					URLConnection conn = url.openConnection();
+					//conn.setRequestMethod("POST");
+					conn.setRequestProperty("Authorization",Auth); 
+					conn.setRequestProperty("Content-Type", "application/json");
+					conn.setRequestProperty("Accept", "application/json");
+					// conn.setRequestProperty("Content-Length",
+					// String.valueOf(postDataBytes.length));
+					//conn.setDoOutput(true);
+					conn.setConnectTimeout(5000);
+					conn.setReadTimeout(5000);
+					/*OutputStreamWriter out = new OutputStreamWriter(
+							conn.getOutputStream());
+					String x = json.toString();
+					out.write(json.toString());
+					out.close();*/
+
+					BufferedReader in= new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					while(in.readLine()!= null) {
+						System.out.println(in.readLine());
+					}
+					System.out.println("\nCrunchify REST Service Invoked Successfully..");
+					in.close();
+					
+					
+					/*
+					 * Reader in = new BufferedReader(new InputStreamReader(
+					 * conn.getInputStream(), "UTF-8"));
+					 * 
+					 * StringBuilder data = new StringBuilder(); for (int c; (c
+					 * = in.read()) >= 0;) { data.append((char) c); } String
+					 * intentData = data.toString();
+					 * System.out.println(intentData);
+					 * System.out.println("HAI"); in.close();
+					 */
+				} 
+				catch (Exception e) {
+					// TODO: handle exception
+					System.out.println(e.toString());
+				}
+			}
+			System.out.println();
+
+		}
+		
+		
+
+	}
+	
+	// HTTP GET request
+		@SuppressWarnings("unused")
+		private void sendGet() throws Exception {
+
+			String url = "https://vhdevservices.zeiss.com/StudyServiceAPI/api/AcquisitionCenter/GetSampleTest ";
+			
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			String Auth= "bearer KfwohGlUcwcI5nLh0Vl8QPuwXNSOvR64Vqp5wYaIeW8OgvAgmAkFA51MeqTLMR0_YMrQLE4V3iNM9SbU9d2seXFEbZg0wZH0HIEk73qVAPmqzW_UxnAimxt5xXsPwtYWOvPlyBTCmDEDsihQ7mXHrR4-YA98Os5h5QZhDgfPvpyowoBK8I8DA23VqhYIUDTMJ980jK1hUOrkXl7IQBiAAndWRcTiC3GomnOHQbtzMppiQSPem135gIxZ932ChvLBcgl9ebM9W1oxpls4RAdu6K86onVxMMmC-UBrJrLkWTSigxpwRn2QIC35qdwBnRDIXYkBFMxKUfeGa9q-uDLZ5titFTJkBZXRHwpCYjLn7sImyekxqgBOleBVBU2ie5fm4l-WCJDDdYNnzVIH5u332g";
+			
+			// optional default is GET
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Authorization",Auth); 
+			//add request header
+//uestProperty("User-Agent", USER_AGENT);
+
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			//print result
+			System.out.println(response.toString());
+
+		}
+	
+
+
+
+	// HTTP POST request
+		private void sendPost() throws Exception {
+
+			String url = "https://vhdevservices.zeiss.com/StudyServiceAPI/api/ClinicalFindings/CreateFaouriteFinding";
+			URL obj = new URL(url);
+			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+			String Auth= "Bearer kHqHic4X-7DMDdIsJ1rz_tURg8z-AVF0rEujCSrrLXqPbX9mC1KKVoUhJOucs2Mzrp70fy1CkWHeWkZIaEADmVW0KHrxmLzr2xBzo-YRYM6lWfJdM94YrQf794uQcOVq_3VfdaGneMdszgF7lwZv4Ym5ZLIf6dkpSlNKPtxGV9vIq2wiPyJarAXEEUcTbY3hx5w_0jHUFcgm0bLnhCaTXzQ1kORSRblhDmCyznbtYSL1wXOIzu9sKuHV00BJ0Gc5MWcaNfpXNYIDFNT2ztSDCOGgCfh4qnI4LZuF_vAhtOLekru5ljmiz-ceTaU6oEpE7nipU5HVYSHGMsOcZ846RY7oqXstlRjmwIqr55rqyoanXALpeBlQEuHdXU33XLmFpgvcP2LptB8d8rctSLxI-Q";
+			 String fin ="{\"RetinalSurface\":{\"MainFinding\":1,\"MainFindingText\":\"Retinal surface not observable\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"RetinalVessel\":{\"MainFinding\":1,\"MainFindingText\":\"Retinal vessels not observable\",\"Findings\":{},\"OtherFindingsDisplayText\":null,\"OtherFindings\":null},\"OpticNerveHead\":{\"MainFinding\":3,\"MainFindingText\":\"ONH findings present\",\"Findings\":{\"ONHRimLoss\":\"Rim loss\",\"ONHRNFLLoss\":\"RNFL loss\",\"ONHVerticalCDR\":\"Vertical CDR of ≥ 0.6\"},\"OtherFindingsDisplayText\":\"Other lesions\",\"OtherFindings\":null}} \r\n";
+			
+			//add request header
+			con.setRequestMethod("POST");
+			//con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			con.setRequestProperty("Authorization",Auth); 
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestProperty("Accept", "application/json");
+			
+			/*String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";*/
+			JSONObject json = new JSONObject();
+			json.put("Name", "TESTFAV3");
+		
+			
+			/*Date date = new Date();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+			System.out.println("UTC Time is: " + dateFormat.format(date));*/
+		
+			json.put("CreatedAt","2018-09-24T13:28:56.782Z");
+			json.put("UpdatedAt","2018-09-24T13:28:56.782Z");
+			json.put("ClinicalFindings",ClinicalFindings[1]); 
+			json.put("ObservationAndComments",ObservationAndComments[1]);
+			//json.put("Recommendation", Recommendation);
+			json.put("RecommendationDetails",RecommendationDetails[1]);
+			json.put("RegionsFindings",RegionsFindings);
+			//json.put("FindingsDetails",FindingsDetails);
+			//json.put("ProductId", ProductId);
+			String urlParameters = json.toString();
+			System.out.println(urlParameters);
+			// Send post request
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			//print result
+			System.out.println(response.toString());
+
+		}
+
+
+}
